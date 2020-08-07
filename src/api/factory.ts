@@ -1,4 +1,5 @@
 import Auth from '../auth';
+import { AppConfig } from '../types';
 import {createRequest, ILimitedRequest} from '../utils/request';
 import Api from './restful/';
 import {Browse, Buy, Feed, Marketing as BuyMarketing, Offer, Order} from './restful/buy';
@@ -9,6 +10,7 @@ import {
     Account,
     Analytics as SellAnalytics,
     Compliance,
+    Finances,
     Fulfillment,
     Inventory,
     Marketing as SellMarketing,
@@ -25,15 +27,18 @@ import {ClientAlerts, Finding, Shopping, Trading} from './traditional/types';
 export default class Factory {
     public readonly auth: Auth;
     public readonly req: ILimitedRequest;
+    public readonly config: AppConfig;
 
     private _traditional?: Traditional;
-    private _restful: any = {}
+    private _restful: any = {};
 
     constructor(
         auth: Auth,
+        config: AppConfig,
         req: ILimitedRequest = createRequest()
     ) {
         this.auth = auth;
+        this.config = config;
         this.req = req;
     }
 
@@ -76,6 +81,7 @@ export default class Factory {
             account: this.createRestfulApi(Account),
             analytics: this.createRestfulApi(SellAnalytics),
             compliance: this.createRestfulApi(Compliance),
+            finances: this.createRestfulApi(Finances),
             fulfillment: this.createRestfulApi(Fulfillment),
             inventory: this.createRestfulApi(Inventory),
             marketing: this.createRestfulApi(SellMarketing),
@@ -112,8 +118,8 @@ export default class Factory {
     }
 
     // tslint:disable-next-line:variable-name
-    private createRestfulApi<T extends Api>(ApiClass: new (auth: Auth) => T): T {
-        const name = ApiClass.name
-        return this._restful[name] || (this._restful[name] = new ApiClass(this.auth));
+    private createRestfulApi<T extends Api>(ApiClass: new (auth: Auth, config: AppConfig) => T): T {
+        const name = ApiClass.name;
+        return this._restful[name] || (this._restful[name] = new ApiClass(this.auth, this.config));
     }
 }

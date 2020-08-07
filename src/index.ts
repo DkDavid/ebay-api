@@ -100,6 +100,7 @@ class eBayApi {
 
         this.factory = new Factory(
             this.auth,
+            this.appConfig,
             this.req
         );
     }
@@ -142,4 +143,4 @@ class eBayApi {
     }
 }
 
-export = eBayApi
+export = eBayApi;

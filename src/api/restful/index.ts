@@ -8,15 +8,18 @@ import {
     getEBayError
 } from '../../errors';
 import {createRequest, ILimitedRequest} from '../../utils/request';
+import { AppConfig } from '../../types';
 
 const log = debug('ebay:restful:api');
 
 export default abstract class Api {
     public readonly auth: Auth;
     public readonly req: ILimitedRequest;
+    public readonly config: AppConfig;
 
-    constructor(auth: Auth, req = createRequest()) {
+    constructor(auth: Auth, config: AppConfig, req = createRequest()) {
         this.auth = auth;
+        this.config = config;
         this.req = req;
     }
 
@@ -62,8 +65,13 @@ export default abstract class Api {
 
     abstract get basePath(): string;
 
+    get subUrl() {
+        if(this.config.subUrl) return 'https://' + this.config.subUrl + '.';
+        return 'https://api.';
+    }
+
     get serverUrl() {
-        return 'https://api.' + (this.auth.eBayConfig.sandbox ? 'sandbox.' : '') + 'ebay.com';
+        return this.subUrl + (this.auth.eBayConfig.sandbox ? 'sandbox.' : '') + 'ebay.com';
     }
 
     get apiVersionPath() {

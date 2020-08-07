@@ -22,6 +22,7 @@ export type eBayConfig = Keyset & {
     authToken?: string,
 
     // Rest Config
+    subUrl?: string,
     marketplaceId?: MarketplaceId,
     endUserCtx?: string,
     contentLanguage?: string
