@@ -49,4 +49,10 @@ export default class Finances extends Api {
             }
         });
     }
+
+    public getSellerFundsSummary() {
+        return this.get(`/seller_funds_summary`, {
+        });
+    }
+
 }
