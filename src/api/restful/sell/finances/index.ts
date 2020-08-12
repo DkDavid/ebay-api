@@ -36,6 +36,12 @@ export default class Finances extends Api {
         return '/sell/finances/v1';
     }
 
+    public getPayouts(params?: ITransactionParams) {
+        return this.get(`/payout`, {
+            params
+        });
+    }
+
     public getTransactions(params?: ITransactionParams) {
         return this.get(`/transaction`, {
             params
